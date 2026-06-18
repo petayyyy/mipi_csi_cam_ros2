@@ -1,0 +1,38 @@
+# RK3588/RK3588S device override for mipi_csi_cam_ros2.
+#
+# The capture node is often /dev/video11, but the exact number depends on
+# camera topology. Check it on the host with:
+#   v4l2-ctl --list-devices
+#   media-ctl -d /dev/media1 -p
+#
+# Combine with docker-compose.fastdds.yml and your base compose file.
+
+services:
+  os:
+    privileged: true
+    devices:
+      - /dev/dma_heap:/dev/dma_heap
+      - /dev/video0:/dev/video0
+      - /dev/video1:/dev/video1
+      - /dev/video2:/dev/video2
+      - /dev/video3:/dev/video3
+      - /dev/video4:/dev/video4
+      - /dev/video5:/dev/video5
+      - /dev/video6:/dev/video6
+      - /dev/video7:/dev/video7
+      - /dev/video8:/dev/video8
+      - /dev/video9:/dev/video9
+      - /dev/video10:/dev/video10
+      - /dev/video11:/dev/video11
+      - /dev/video12:/dev/video12
+      - /dev/video13:/dev/video13
+      - /dev/media0:/dev/media0
+      - /dev/media1:/dev/media1
+      - /dev/media2:/dev/media2
+      - /dev/media3:/dev/media3
+      - /dev/v4l-subdev0:/dev/v4l-subdev0
+      - /dev/v4l-subdev1:/dev/v4l-subdev1
+      - /dev/v4l-subdev2:/dev/v4l-subdev2
+      - /dev/v4l-subdev3:/dev/v4l-subdev3
+      - /dev/v4l-subdev4:/dev/v4l-subdev4
+      - /dev/v4l-subdev5:/dev/v4l-subdev5

@@ -1,0 +1,34 @@
+# Base Docker Compose template for mipi_csi_cam_ros2.
+#
+# This is intentionally small: use your own ROS 2 image with this package and
+# its dependencies installed, then add a platform override from docker/.
+#
+# Examples:
+#   docker compose -f docker-compose.yml -f docker/docker-compose.fastdds.yml -f docker/docker-compose.rpi.yml up -d
+#   docker compose -f docker-compose.yml -f docker/docker-compose.fastdds.yml -f docker/docker-compose.rk3588.yml up -d
+
+services:
+  os:
+    platform: linux/arm64
+    image: ${MIPI_CSI_CAM_ROS2_IMAGE:-ros:humble-ros-base}
+    container_name: mipi_csi_cam_ros2
+
+    privileged: true
+    userns_mode: host
+
+    environment:
+      ROS_DOMAIN_ID: "0"
+      ROS_LOCALHOST_ONLY: "0"
+
+    working_dir: /workspace
+
+    volumes:
+      - .:/workspace/src/mipi_csi_cam_ros2:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /run/udev:/run/udev:ro
+      - /tmp:/tmp
+      - /sys:/sys
+
+    stdin_open: true
+    tty: true
+    restart: unless-stopped

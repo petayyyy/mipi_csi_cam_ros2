@@ -46,6 +46,104 @@ sudo apt install -y \
 `gstreamer1.0-libcamera` нужен только для backend `libcamera` на Raspberry Pi.
 RK3588/RK3588S использует `v4l2src`.
 
+## Fast DDS для стабильного FPS
+
+Для стабильной частоты кадров важно явно включить Fast DDS с SHM transport.
+Без этого при публикации `sensor_msgs/msg/Image` могут появляться просадки FPS,
+особенно в Docker и при нескольких подписчиках.
+
+В репозитории уже есть готовый профиль:
+
+```text
+config/fastdds_profile.xml
+```
+
+Профиль включает Fast DDS shared memory transport, увеличивает размер SHM
+segment до `64 MiB` и повышает `port_queue_capacity` до `512`.
+
+### Запуск без Docker
+
+Перед запуском ноды укажите Fast DDS profile:
+
+```bash
+cd ~/mipi_csi_cam_ros2_ws
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+
+export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+export FASTDDS_DEFAULT_PROFILES_FILE=$PWD/src/mipi_csi_cam_ros2/config/fastdds_profile.xml
+export FASTRTPS_DEFAULT_PROFILES_FILE=$FASTDDS_DEFAULT_PROFILES_FILE
+
+ros2 launch mipi_csi_cam_ros2 camera.launch.py \
+    source_type:=libcamera \
+    sensor:=imx219 \
+    width:=1280 \
+    height:=960 \
+    fps:=30 \
+    camera_id:=1
+```
+
+`FASTRTPS_DEFAULT_PROFILES_FILE` оставлен для совместимости со старыми версиями
+Fast DDS/Fast RTPS в ROS 2 окружениях.
+
+### Запуск в Docker
+
+Для Docker в репозитории приложены compose override-файлы:
+
+| Файл | Назначение |
+|---|---|
+| `docker-compose.yml` | базовый compose-шаблон с service `os` |
+| `docker/docker-compose.fastdds.yml` | Fast DDS env, `ipc: host`, `shm_size: 512m`, mount XML-профиля |
+| `docker/docker-compose.rpi.yml` | устройства камеры для Raspberry Pi 5 |
+| `docker/docker-compose.rk3588.yml` | устройства камеры/media/subdev для RK3588/RK3588S |
+
+Минимально важные параметры Docker:
+
+```yaml
+services:
+  os:
+    ipc: host
+    shm_size: 512m
+    environment:
+      RMW_IMPLEMENTATION: rmw_fastrtps_cpp
+      FASTDDS_DEFAULT_PROFILES_FILE: /etc/ros/fastdds_profile.xml
+      FASTRTPS_DEFAULT_PROFILES_FILE: /etc/ros/fastdds_profile.xml
+    volumes:
+      - ./config/fastdds_profile.xml:/etc/ros/fastdds_profile.xml:ro
+```
+
+Базовый `docker-compose.yml` использует image из переменной
+`MIPI_CSI_CAM_ROS2_IMAGE`. Перед запуском укажите свой ROS 2 image, в котором
+установлены зависимости пакета:
+
+```bash
+export MIPI_CSI_CAM_ROS2_IMAGE=<your-ros2-camera-image>
+```
+
+Пример запуска для Raspberry Pi 5 из корня этого репозитория:
+
+```bash
+docker compose \
+    -f docker-compose.yml \
+    -f docker/docker-compose.fastdds.yml \
+    -f docker/docker-compose.rpi.yml \
+    up -d
+```
+
+Пример запуска для RK3588/RK3588S:
+
+```bash
+docker compose \
+    -f docker-compose.yml \
+    -f docker/docker-compose.fastdds.yml \
+    -f docker/docker-compose.rk3588.yml \
+    up -d
+```
+
+В примерах service называется `os`, как в основном `sverk-ros2` compose. Если в
+вашем проекте контейнер камеры называется иначе, переименуйте service в
+override-файлах или перенесите поля внутрь своего service.
+
 ## Структура workspace
 
 Клонируйте репозиторий в директорию `src` ROS 2 workspace:

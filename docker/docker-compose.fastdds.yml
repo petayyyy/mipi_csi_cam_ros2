@@ -1,0 +1,23 @@
+# Docker Compose override for stable ROS 2 image transport with Fast DDS.
+#
+# Use it together with your project compose file, or copy the service fields
+# into the container that runs mipi_csi_cam_ros2.
+#
+# Example:
+#   docker compose \
+#     -f docker-compose.yml \
+#     -f docker/docker-compose.fastdds.yml \
+#     up -d
+
+services:
+  os:
+    ipc: host
+    shm_size: 512m
+    environment:
+      ROS_DOMAIN_ID: "0"
+      ROS_LOCALHOST_ONLY: "0"
+      RMW_IMPLEMENTATION: rmw_fastrtps_cpp
+      FASTDDS_DEFAULT_PROFILES_FILE: /etc/ros/fastdds_profile.xml
+      FASTRTPS_DEFAULT_PROFILES_FILE: /etc/ros/fastdds_profile.xml
+    volumes:
+      - ./config/fastdds_profile.xml:/etc/ros/fastdds_profile.xml:ro

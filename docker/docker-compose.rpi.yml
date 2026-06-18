@@ -1,0 +1,17 @@
+# Raspberry Pi 5 device override for mipi_csi_cam_ros2.
+#
+# Combine with docker-compose.fastdds.yml and your base compose file.
+
+services:
+  os:
+    privileged: true
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/dma_heap:/dev/dma_heap
+      - /dev/video0:/dev/video0
+      - /dev/video1:/dev/video1
+      - /dev/video2:/dev/video2
+      - /dev/media0:/dev/media0
+      - /dev/media1:/dev/media1
+      - /dev/media2:/dev/media2
+      - /dev/vchiq:/dev/vchiq
