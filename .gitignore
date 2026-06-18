@@ -1,0 +1,26 @@
+# ROS 2 / colcon build artifacts
+/build/
+/install/
+/log/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+
+# Python/cache files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local environments and editor state
+.env
+.venv/
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

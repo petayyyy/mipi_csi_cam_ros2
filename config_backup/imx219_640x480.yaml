@@ -1,0 +1,58 @@
+image_width: 640
+image_height: 480
+camera_name: imx219
+camera_matrix:
+  rows: 3
+  cols: 3
+  data:
+  - 475.0
+  - 0.0
+  - 320.0
+  - 0.0
+  - 475.0
+  - 240.0
+  - 0.0
+  - 0.0
+  - 1.0
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 1.0
+projection_matrix:
+  rows: 3
+  cols: 4
+  data:
+  - 475.0
+  - 0.0
+  - 320.0
+  - 0.0
+  - 0.0
+  - 475.0
+  - 240.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 1.0
+  - 0.0
+# APPROXIMATE values for IMX219 (3280x2464 sensor, 62.2deg HFOV)
+# Focal length estimated: 475px at 640x480 from HFOV=62.2deg
+# CALIBRATE PROPERLY with: ros2 run camera_calibration cameracalibrator

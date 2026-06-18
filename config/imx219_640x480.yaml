@@ -1,0 +1,46 @@
+# IMX219 camera calibration — Raspberry Pi 5
+# Resolution: 640x480 (4:3)
+#
+# Values derived from IMX219 physical parameters:
+#   Sensor:      Sony IMX219, 1/4" (3.674 x 2.738 mm active area), pixel 1.12 um
+#   Capture mode: 1640x1232 (2x2 binned, 2.24 um pixel) → ISP scales to 640x480
+#                 scale_x = 640/1640 = 0.390, scale_y = 480/1232 = 0.390
+#   Lens:        Standard M12, f ≈ 3.04 mm
+#   fx = fy = 3.04mm / 0.00224mm × 0.390 = 1357 × 0.390 = 529 px
+#   FoV: horizontal 62.2°, vertical 48.7° (full 4:3 sensor FoV, same as 1280x960)
+#   Distortion:  same coefficients (normalized coords, lens-specific)
+#
+# Note: 640x480 is exactly half of 1280x960 in each dimension — same FoV,
+# same distortion, focal length scales proportionally (1059 / 2 = 529.5 px).
+#
+# Replace with real calibration for accurate ArUco pose estimation:
+#   ros2 run camera_calibration cameracalibrator \
+#     --size 8x6 --square 0.025 \
+#     image:=/camera_1/image_raw camera:=/camera_1
+
+image_width: 640
+image_height: 480
+camera_name: imx219
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [530.0,   0.0, 320.0,
+           0.0, 530.0, 240.0,
+           0.0,   0.0,   1.0]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.265, 0.070, 0.0, 0.0, 0.0]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1.0, 0.0, 0.0,
+         0.0, 1.0, 0.0,
+         0.0, 0.0, 1.0]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [530.0,   0.0, 320.0, 0.0,
+           0.0, 530.0, 240.0, 0.0,
+           0.0,   0.0,   1.0, 0.0]

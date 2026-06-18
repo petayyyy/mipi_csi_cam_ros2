@@ -1,0 +1,40 @@
+ov5647:
+  ros__parameters:
+    width: 640
+    height: 480
+    format: "YUYV"
+    FrameDurationLimits: [16971, 16971]
+    role: "video"
+
+imx219:
+  ros__parameters:
+    width: 640
+    height: 480
+    format: "RGB888"
+    FrameDurationLimits: [16971, 16971]
+    role: "video"
+
+imx708:
+  ros__parameters:
+    width: 2304
+    height: 1296
+    format: "BGR888"
+    FrameDurationLimits: [16971, 16971]
+
+camera_tf_0:
+  ros__parameters:
+    parent_frame: "base_link"
+    xyz: [0.065, 0.0, -0.03]
+    rpy: [-1.5707963, 0.0, 3.1415926]
+
+camera_tf_1:
+  ros__parameters:
+    parent_frame: "base_link"
+    xyz: [0.065, 0.0, -0.03]
+    rpy: [-1.5707963, 0.0, 3.1415926]
+
+camera_tf_2:
+  ros__parameters:
+    parent_frame: "base_link"
+    xyz: [0.065, 0.0, -0.03]
+    rpy: [-1.5707963, 0.0, 3.1415926]

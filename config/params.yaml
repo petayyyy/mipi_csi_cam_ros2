@@ -1,0 +1,72 @@
+# ---------------------------------------------------------------------------
+# RK3588/RK3588S V4L2 backend
+# Tested target boards: Radxa CM5, Orange Pi 5 Pro.
+# Rockchip rkisp1 ISP usually exposes NV12 frames through /dev/video11.
+# ---------------------------------------------------------------------------
+ov5647:
+  ros__parameters:
+    source_type: "v4l2"
+    width: 640
+    height: 480
+    format: "NV12"
+    fps: 30
+    video_device: "/dev/video11"
+    io_mode: "dmabuf"
+
+imx219:
+  ros__parameters:
+    source_type: "v4l2"
+    width: 640
+    height: 480
+    format: "NV12"
+    fps: 30
+    video_device: "/dev/video11"
+    io_mode: "dmabuf"
+
+imx708:
+  ros__parameters:
+    source_type: "v4l2"
+    width: 2304
+    height: 1296
+    format: "NV12"
+    fps: 30
+    video_device: "/dev/video11"
+    io_mode: "dmabuf"
+
+# ---------------------------------------------------------------------------
+# Raspberry Pi 5 libcamera backend
+# ---------------------------------------------------------------------------
+ov5647_rpi5:
+  ros__parameters:
+    source_type: "libcamera"
+    width: 640
+    height: 480
+    fps: 30
+
+imx219_rpi5:
+  ros__parameters:
+    source_type: "libcamera"
+    width: 1280
+    height: 960
+    fps: 30
+
+# ---------------------------------------------------------------------------
+# Static TF for each camera, common to both backends
+# ---------------------------------------------------------------------------
+camera_tf_0:
+  ros__parameters:
+    parent_frame: "base_link"
+    xyz: [0.065, 0.0, -0.03]
+    rpy: [-1.5707963, 0.0, 3.1415926]
+
+camera_tf_1:
+  ros__parameters:
+    parent_frame: "base_link"
+    xyz: [0.065, 0.0, -0.03]
+    rpy: [-1.5707963, 0.0, 3.1415926]
+
+camera_tf_2:
+  ros__parameters:
+    parent_frame: "base_link"
+    xyz: [0.065, 0.0, -0.03]
+    rpy: [-1.5707963, 0.0, 3.1415926]

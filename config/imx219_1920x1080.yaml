@@ -1,0 +1,46 @@
+# IMX219 camera calibration — Raspberry Pi 5
+# Resolution: 1920x1080 (16:9)
+#
+# Values derived from IMX219 physical parameters:
+#   Sensor:      Sony IMX219, 1/4" (3.674 x 2.738 mm active area), pixel 1.12 um
+#   Capture mode: 3280x2464 full res → ISP crops 16:9 center (3280x1845)
+#                 → scales to 1920x1080 (scale 0.5854)
+#   Lens:        Standard M12, f ≈ 3.04 mm
+#   fx = fy = 3.04mm / (3.674mm/3280px) / (3280/1920) = 2714 × 0.5854 = 1589 px
+#   FoV: horizontal 62.2° (full sensor width), vertical 37.6° (16:9 crop)
+#   Distortion:  same coefficients as other modes (normalized coords, lens-specific)
+#
+# Note: 1920x1080 uses a CENTER CROP from 4:3 sensor — same horizontal FoV
+# as 1280x960, but ~10° less vertical FoV (cropped top/bottom).
+#
+# Replace with real calibration for accurate ArUco pose estimation:
+#   ros2 run camera_calibration cameracalibrator \
+#     --size 8x6 --square 0.025 \
+#     image:=/camera_1/image_raw camera:=/camera_1
+
+image_width: 1920
+image_height: 1080
+camera_name: imx219
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [1589.0,    0.0, 960.0,
+            0.0, 1589.0, 540.0,
+            0.0,    0.0,   1.0]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.265, 0.070, 0.0, 0.0, 0.0]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1.0, 0.0, 0.0,
+         0.0, 1.0, 0.0,
+         0.0, 0.0, 1.0]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [1589.0,    0.0, 960.0, 0.0,
+            0.0, 1589.0, 540.0, 0.0,
+            0.0,    0.0,   1.0, 0.0]
